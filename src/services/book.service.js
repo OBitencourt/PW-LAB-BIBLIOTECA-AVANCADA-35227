@@ -1,11 +1,22 @@
 import prisma from "../prisma/prismaClient.js"
 
 
-export const getBooksService = async (page, limit) => {
+export const getBooksService = async (page, limit, sort) => {
 
     let data = {}
-    let books = []
-    const skip = (page - 1) * limit
+    let orderBy = {}
+    const pageNumber = page || 1
+    const limitNumber = limit || 10
+    const skip = (pageNumber - 1) * limitNumber
+
+    
+    if (sort === "year") {
+        orderBy = { year: "asc" }
+    }
+
+    if (sort === "title") {
+        orderBy = { title: "asc" }
+    }
 
     if(page && !limit) {
         return data = {
@@ -20,15 +31,12 @@ export const getBooksService = async (page, limit) => {
             message: "Forneça também a página."
         }
     }
-
-    if(page && limit) {
-        books = await prisma.book.findMany({
-            skip: skip,
-            take: limit
-        })
-    } else {
-        books = await prisma.book.findMany()
-    }
+    
+    const books = await prisma.book.findMany({
+        skip: skip,
+        take: limitNumber,
+        orderBy: orderBy
+    })
 
 
     if(!books) {

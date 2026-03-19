@@ -3,8 +3,8 @@ import { createBookService, deleteBookService, editBookService, getBookService, 
 
 
 export const getBooks = async (req, res) => {
-    const { page, limit } = req.query
-    const { status, message, books } = await getBooksService(parseInt(page), parseInt(limit))
+    const { page, limit, sort } = req.query
+    const { status, message, books } = await getBooksService(parseInt(page), parseInt(limit), sort)
 
     res.status(status).json({ message: message, books: books ? books : "Erro" })
 }
