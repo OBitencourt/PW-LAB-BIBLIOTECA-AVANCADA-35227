@@ -7,7 +7,11 @@ export const getAuthorsService = async () => {
 
     let data = {}
 
-    const authors = await prisma.author.findMany()
+    const authors = await prisma.author.findMany({
+        include: {
+            books: true
+        }
+    })
 
     if(!authors) {
         return data = {

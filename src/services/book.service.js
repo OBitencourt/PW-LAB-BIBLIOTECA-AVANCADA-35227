@@ -35,7 +35,10 @@ export const getBooksService = async (page, limit, sort) => {
     const books = await prisma.book.findMany({
         skip: skip,
         take: limitNumber,
-        orderBy: orderBy
+        orderBy: orderBy,
+        include: {
+            author: true
+        }
     })
 
 
