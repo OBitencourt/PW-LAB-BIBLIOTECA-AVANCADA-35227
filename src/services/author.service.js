@@ -35,6 +35,13 @@ export const getAuthorService = async (id) => {
 
     const author = await prisma.author.findUnique({ where: { id: id } })
 
+    if(!author) {
+        return data = {
+            status: 404,
+            message: "Autor não existe no banco de dados."
+        }
+    }
+
     return data = {
         status: 200,
         message: "Sucesso ao buscar autor.",
@@ -76,7 +83,7 @@ export const editAuthorService = async (id, name, nationality, birthYear) => {
     if (!authorExists) {
         return data = {
             status: 404,
-            message: `O autor com o id '${id}' não foi encontrado`
+            message: `O autor com o id '${id}' não existe.`
         }
     }
 
@@ -127,6 +134,15 @@ export const deleteAuthorService = async (id) => {
 }
 
 export const getAuthorBooksService = async (id) => {
+    const author = await prisma.author.findMany({ where: { id } })
+
+    if(!author) {
+        return data = {
+            status: 404,
+            message: "O Author fornecido não existe no banco de dados."
+        }
+    }
+
     const books = await prisma.book.findMany({ where: { authorId: id } })
     let data = {}
 

@@ -33,6 +33,13 @@ export const getBookService = async (id) => {
 
     const book = await prisma.book.findUnique({ where: { id: id } })
 
+    if (!book) {
+        return data = {
+            status: 404,
+            message: "O livro não existe no banco de dados."
+        }
+    }
+
     return data = {
         status: 200,
         message: "Sucesso ao buscar livro.",
@@ -96,7 +103,7 @@ export const editBookService = async (id, title, year, genre, available) => {
     if (!bookExists) {
         return data = {
             status: 404,
-            message: `O livro com o id '${id}' não foi encontrado`
+            message: `O livro com o id '${id}' não existe no banco de dados.`
         }
     }
 
@@ -143,5 +150,31 @@ export const deleteBookService = async (id) => {
         status: 200,
         message: "Sucesso ao deletar livro",
         book: book
+    }
+}
+
+export const searchBooksService = async (title) => {
+    let data = {}
+
+    if(!title) {
+        return data = {
+            status: 404,
+            message: "Forneça um título de um livro para realizar a pesquisa"
+        }
+    }
+
+    const books = await prisma.book.findMany({
+        where: {
+            title: {
+                contains: title,
+                mode: "insensitive"
+            }
+        }
+    })
+
+    return data = {
+        status: 200,
+        message: "Sucesso ao buscar livros",
+        books: books
     }
 }
