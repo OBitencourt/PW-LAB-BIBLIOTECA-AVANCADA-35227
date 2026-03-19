@@ -1,11 +1,35 @@
 import prisma from "../prisma/prismaClient.js"
 
 
-export const getBooksService = async () => {
+export const getBooksService = async (page, limit) => {
 
     let data = {}
+    let books = []
+    const skip = (page - 1) * limit
 
-    const books = await prisma.book.findMany()
+    if(page && !limit) {
+        return data = {
+            status: 404,
+            message: "Forneça também o limite."
+        }
+    }
+
+    if(!page && limit) {
+        return data = {
+            status: 404,
+            message: "Forneça também a página."
+        }
+    }
+
+    if(page && limit) {
+        books = await prisma.book.findMany({
+            skip: skip,
+            take: limit
+        })
+    } else {
+        books = await prisma.book.findMany()
+    }
+
 
     if(!books) {
         return data = {
@@ -145,6 +169,13 @@ export const deleteBookService = async (id) => {
     }
 
     const book = await prisma.book.delete({ where: { id } })
+
+    if(!book) {
+        return data = {
+            status: 204,
+            message: "Não foi encontrado o respectivo livro."
+        }
+    }
 
     return data = {
         status: 200,
