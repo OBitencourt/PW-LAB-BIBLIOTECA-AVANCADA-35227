@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import authorsRoute from './routes/author.routes.js'
 import booksRouter from './routes/book.routes.js'
 import prisma from './prisma/prismaClient.js'
+import errorMiddleware from './middlewares/error.middleware.js'
 
 const app = express()
 
@@ -36,6 +37,8 @@ app.use("/stats", async (req, res) => {
 
     return res.status(200).json({ message: "Status do banco de dados pegos com sucesso: ", data})
 })
+
+app.use(errorMiddleware)
 
 const PORT = process.env.SERVER_PORT || 3000
 app.listen(PORT, () => {
