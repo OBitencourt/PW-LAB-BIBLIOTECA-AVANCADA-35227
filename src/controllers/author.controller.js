@@ -11,13 +11,13 @@ export const getAuthors = async (req, res) => {
 
 export const getAuthor = async (req, res) => {
     const { id } = req.params
-    const author = await getAuthorService(id)
+    const { status, message, author } = await getAuthorService(id)
 
     if(!author) {
         return res.status(400).json({ message: "Não há autor cadastrados com esse id."})
     }
 
-    res.status(200).json({ message: "Sucesso ao buscar autores.", author: author })
+    res.status(status).json({ message: message, author: author })
 }
 
 export const createAuthor = async (req, res) => {
