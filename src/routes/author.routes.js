@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { createAuthor, deleteAuthor, editAuthor, getAuthor, getAuthorBooks, getAuthors } from "../controllers/author.controller.js";
+import { checkToken } from "../middlewares/checkToken.js"
 
-const authorsRoute = Router()
+const authorsRouter = Router()
 
-authorsRoute.get("/", getAuthors)
-authorsRoute.get("/:id", getAuthor)
-authorsRoute.post("/", createAuthor)
-authorsRoute.put("/:id", editAuthor)
-authorsRoute.delete("/:id", deleteAuthor)
-authorsRoute.get("/:id/books", getAuthorBooks)
+authorsRouter.get("/", getAuthors)
+authorsRouter.get("/:id", getAuthor)
+authorsRouter.get("/:id/books", getAuthorBooks)
+authorsRouter.post("/", checkToken , createAuthor)
+authorsRouter.put("/:id", checkToken , editAuthor)
+authorsRouter.delete("/:id", checkToken , deleteAuthor)
 
-export default authorsRoute
+export default authorsRouter
